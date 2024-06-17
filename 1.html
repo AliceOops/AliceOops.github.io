@@ -1,0 +1,282 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+        *{
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+    }
+    .banner{
+        width: 100%;
+        background-color: rgba(0,0,0,0.8);
+        background-repeat: no-repeat;
+        height: 300px;
+        background-size: cover;
+        background-position-y: 0px;
+        text-align: center;
+        color: white;
+        background-image: url(images/kali-geometric.png);
+    }
+    .top-nav{
+        color: white;
+        padding: 15px 20px 0px; 
+    }
+    .top-nav ul{
+        width: 1880px;
+    }
+    .top-nav li{
+        height: 25px;
+        list-style: none;
+        float: left;
+        margin-right: 15px;
+        line-height: 25px;
+        position: relative;
+    }
+    .underline{
+        width: 0px;
+        height: 5px;
+        position: absolute;
+        bottom: -10px;
+        left: 0px;
+        transition: all 1s;
+    }
+    .top-nav li:nth-child(1){
+        font-size: 30px;
+        margin-left: 5px;
+    }
+    .top-nav li:nth-child(2){
+        margin-left: 65%;
+        background-image: url(images/search.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+        
+    }
+    .top-nav li:nth-child(2):hover .underline,
+    .top-nav li:nth-child(3):hover .underline,
+    .top-nav li:nth-child(4):hover .underline,
+    .top-nav li:nth-child(5):hover .underline,
+    .top-nav li:nth-child(6):hover .underline,
+    .top-nav li:nth-child(7):hover .underline,
+    .top-nav li:nth-child(8):hover .underline{
+        width: 65px;
+        background-color: skyblue;
+    }
+    .top-nav li:nth-child(3){
+        background-image: url(images/home.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+    }
+    .top-nav li:nth-child(4){
+        background-image: url(images/zan.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+    }
+    .top-nav li:nth-child(5){
+        background-image: url(images/jia.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+    }
+    .top-nav li:nth-child(6){
+        background-image: url(images/essay.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+    }
+    .top-nav li:nth-child(7){
+        background-image: url(images/friendLink.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+    }
+    .top-nav li:nth-child(8){
+        background-image: url(images/mao.png);
+        background-size: 25px;
+        background-repeat: no-repeat;
+        padding-left: 30px;
+    }
+    .top-nav a:link{
+        text-decoration: none;
+        color: white;
+    }
+    .top-nav a:visited{
+        text-decoration: none;
+        color: white;
+    }
+    .banner h1{
+        margin-top: 100px;
+        letter-spacing: 10px;
+        font-size: 50px;
+    }
+    .banner p{
+        font-size: 23px;
+        font-family: "仿宋";
+        font-weight: bold;
+    }
+    .content{
+        width: 1200px;
+        height: 100%;
+        box-shadow: 0px 0px 5px 0px gray;
+        border-radius: 10px;
+        margin: 20px auto;
+        padding-left: 120px;
+        padding-right: 120px;
+        padding-top: 20px;
+    }
+    .content video{
+        margin-top: 10px;
+        width: 300px;
+        height: 540px;
+        border-radius: 10px;
+    }
+    .content p{
+        white-space: pre;
+    }
+	</style>
+</head>
+
+<body>
+    <div class="banner">
+        <div class="top-nav">
+            <ul>
+                <li><a href="./home.html">Renew</a></li>
+                <li><a href="#">搜索</a><div class="underline"></div></li>
+                <li><a href="./home.html">首页</a><div class="underline"></div></li>
+                <li><a href="#">福利</a><div class="underline"></div></li>
+                <li><a href="#">分类</a><div class="underline"></div></li>
+                <li><a href="#">文章</a><div class="underline"></div></li>
+                <li><a href="#">友链</a><div class="underline"></div></li>
+                <li><a href="#">关于</a><div class="underline"></div></li>
+            </ul>
+        </div>
+        <h1>Java TCP双端通信</h1>
+    </div>
+    <div class="content">
+        <p>
+import java.net.*;
+import java.io.*;
+import java.util.Scanner;
+public class 双端通信Client {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Socket s = new Socket("127.0.0.1",10010);
+        System.out.println("服务端"+s.getInetAddress().getHostAddress()
+                +":"+s.getPort()+"连接成功");
+        Scanner sca = new Scanner(System.in);
+            new Thread(){
+                public void run(){
+                    System.out.println("请输入你要发送的消息：");
+                    while(true){
+                        try{
+                            String msg = sca.nextLine();
+                            OutputStream os = s.getOutputStream();
+                            os.write(msg.getBytes());
+                            if(msg.equals("bye")){
+                                break;
+                            }
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }.start();
+            new Thread(){
+                public void run(){
+                    try{
+                        InputStream is = s.getInputStream();
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while(true){
+                            len = is.read(buf);
+                            if(len==-1){
+                                break;
+                            }
+                            String msg = new String(buf,0,len);
+                            System.out.println("服务端"+s.getInetAddress().getHostAddress()
+                                    +":"+s.getPort()
+                                    +"-->"+msg);
+                            if(msg.equals("bye")){
+                            s.close();
+                                            sca.close();
+                                break;
+                            }
+                        }
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+
+        }
+}
+
+import java.net.*;
+import java.io.*;
+import java.util.Scanner;
+public class 双端通信Server {
+	public static void main(String[] args) throws IOException, InterruptedException {
+		ServerSocket ls = new ServerSocket(10010);
+		System.out.println("等待客户端连接...");
+		Scanner sca = new Scanner(System.in);
+			Socket s = ls.accept();
+			System.out.println("客户端"+s.getInetAddress().getHostAddress()+":"+s.getPort()+"连接成功");
+			new Thread(){
+				public void run(){
+					try{
+						InputStream is = s.getInputStream();
+						byte[] buf = new byte[1024];
+						int len;
+						while(true){
+							len = is.read(buf);
+							if(len==-1){
+								break;
+							}
+							String msg = new String(buf,0,len);
+							System.out.println("客户端"+s.getInetAddress().getHostAddress()
+									+":"+s.getPort()
+									+"-->"+msg);
+							if(msg.equals("bye")){
+								break;
+							}
+						}
+					}catch(IOException e){
+						e.printStackTrace();
+					}
+				}
+			}.start();
+			new Thread(){
+				public void run(){
+					while(true){
+						try{
+							System.out.println("请输入你要发送的消息：");
+							String msg = sca.nextLine();
+							OutputStream os = s.getOutputStream();
+							os.write(msg.getBytes());
+							if(msg.equals("bye")){
+								sca.close();
+								ls.close();
+								break;
+							}
+						}catch (IOException e){
+							e.printStackTrace();
+						}
+					}
+				}
+			}.start();
+		}
+}
+        </p>
+        我要摇！<br>
+        我要摇！！<br>
+        我要摇！！！<br>
+        <video src="./images/yao.mp4" controls="true"></video><br>
+        <p>https://www.bilibili.com/video/BV1Dm4y1r7M2</p>
+    </div>
+</body>
+</html>
